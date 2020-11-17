@@ -26,6 +26,7 @@ var 			   { return 14; }
 \;			   { return 11; }
 \=			   { return 12; }
 [0-9]+			   { return 13; }
+\/\/.*			   { return 15; }
 .                          { cerr << "Error: unexpected character in input" << endl; return -1; }
 
 %%
@@ -51,6 +52,7 @@ int main () {
 	case 12: cout << "T_ASSIGN " << lexeme << endl; break;
 	case 13: cout << "T_INTCONSTANT " << lexeme << endl; break;
 	case 14: cout << "T_VAR " << lexeme << endl; break;
+	case 15: cout << "T_COMMENT " << lexeme << endl; break;
         default: exit(EXIT_FAILURE);
       }
     } else {
