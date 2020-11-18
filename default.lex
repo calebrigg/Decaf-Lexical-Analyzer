@@ -22,11 +22,12 @@ var 			   { return 14; }
 \)                         { return 7; }
 [a-zA-Z\_][a-zA-Z\_0-9]*   { return 8; }
 [\t\r\a\v\b ]+             { return 9; }
-\n                         { return 10; }
+\n[\t\r\a\v\b ]*           { return 10; }
 \;			   { return 11; }
 \=			   { return 12; }
 [0-9]+			   { return 13; }
 \/\/.*			   { return 15; }
+\'.{1,2}\'			   { return 16; }
 .                          { cerr << "Error: unexpected character in input" << endl; return -1; }
 
 %%
@@ -39,7 +40,7 @@ int main () {
       lexeme.assign(yytext);
       switch(token) {
         case 1: cout << "T_FUNC " << lexeme << endl; break;
-        case 2: cout << "T_INT " << lexeme << endl; break;
+        case 2: cout << "T_INTTYPE " << lexeme << endl; break;
         case 3: cout << "T_PACKAGE " << lexeme << endl; break;
         case 4: cout << "T_LCB " << lexeme << endl; break;
         case 5: cout << "T_RCB " << lexeme << endl; break;
@@ -53,6 +54,7 @@ int main () {
 	case 13: cout << "T_INTCONSTANT " << lexeme << endl; break;
 	case 14: cout << "T_VAR " << lexeme << endl; break;
 	case 15: cout << "T_COMMENT " << lexeme << endl; break;
+	case 16: cout << "T_CHARCONSTANT " << lexeme << endl; break;
         default: exit(EXIT_FAILURE);
       }
     } else {
