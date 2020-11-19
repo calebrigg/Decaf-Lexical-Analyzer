@@ -69,7 +69,7 @@ var 			   { return 14; }
 
 
 string getnewline(string lexeme){
-string result = "T_WHITESPACE ";
+	string result = "T_WHITESPACE ";
 	for (int i=0; i<lexeme.size(); i++){
 		if(lexeme[i]=='\n'){
 			result+="\\n";
