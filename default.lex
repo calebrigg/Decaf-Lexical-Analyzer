@@ -78,6 +78,10 @@ string getnewline(string lexeme){
 return result;
 }
 
+void errLine(int linecount){
+	cout<< linecount << endl;
+}
+
 int main () {
   int token;
   int linecount=1;
@@ -137,10 +141,11 @@ int main () {
 	case 49: cout << "T_OR " << lexeme << endl; break;
 	case 50: cout << "T_RIGHTSHIFT " << lexeme << endl; break;
 	case 51: cout << "T_RSB " << lexeme << endl; break;
-        default: exit(EXIT_FAILURE);
+        default: errLine(linecount);exit(EXIT_FAILURE);
       }
     } else {
       if (token < 0) {
+	errLine(linecount);
         exit(EXIT_FAILURE);
       }
     }
