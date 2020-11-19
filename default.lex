@@ -36,7 +36,7 @@ var 			   { return 14; }
 \)                         { return 7; }
 [a-zA-Z\_][a-zA-Z\_0-9]*   { return 8; }
 [\t\r\a\v\b ]+             { return 9; }
-\n[\t\r\a\v\b ]*           { return 10; }
+\n+[\t\r\a\v\b ]*\n*       { return 10; }
 \;			   { return 11; }
 \=			   { return 12; }
 [0-9]+			   { return 13; }
@@ -67,6 +67,17 @@ var 			   { return 14; }
 
 %%
 
+
+string getnewline(string lexeme){
+string result = "T_WHITESPACE ";
+	for (int i=0; i<lexeme.size(); i++){
+		if(lexeme[i]=='\n'){
+			result+="\\n";
+		}
+	}
+return result;
+}
+
 int main () {
   int token;
   int linecount=1;
@@ -84,7 +95,7 @@ int main () {
         case 7: cout << "T_RPAREN " << lexeme << endl; break;
         case 8: cout << "T_ID " << lexeme << endl; break;
         case 9: cout << "T_WHITESPACE " << lexeme << endl; break;
-        case 10: linecount++; cout << "T_WHITESPACE \\n" << endl; break;
+        case 10: linecount++; cout << getnewline(lexeme) << endl; break;
 	case 11: cout << "T_SEMICOLON " << lexeme << endl; break;
 	case 12: cout << "T_ASSIGN " << lexeme << endl; break;
 	case 13: cout << "T_INTCONSTANT " << lexeme << endl; break;
@@ -136,3 +147,4 @@ int main () {
   }
   exit(EXIT_SUCCESS);
 }
+
