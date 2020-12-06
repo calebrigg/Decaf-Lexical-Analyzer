@@ -5,9 +5,14 @@
 #include <cstdlib>
 
 using namespace std;
-
+int linecount=1;
 %}
 
+char [a-zA-Z]*
+escaped_char "\\"("n"|"t"|"r"|"a"|"v"|"b"|"\\")
+string_lit "\""({char}|{escaped_char}|" ")*"\""
+char_lit "\'"([a-zA-Z]|{escaped_char})"\'"
+%s INPUT
 %%
   /*
     Pattern definitions for all tokens
@@ -41,14 +46,21 @@ var 			   { return 14; }
 \=			   { return 12; }
 [0-9]+			   { return 13; }
 \/\/.*\n		   { return 15; }
-\'.{1,2}\'		   { return 16; }
+{char_lit}	   	{ return 16; }
+\'\' { cerr << "Error: char constant has zero width" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
+\'[\\|\n|\"|\del]+\' { cerr << "Error: unexpected character in input" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
+\'..+\' { cerr << "Error: char constant length is greater than one" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
+\'. { cerr << "Error: unterminated char constant" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
 -			   { return 18; }
 ,			   { return 32; }
 ==			   { return 33; }
 \%			   { return 34; }
 \*			   { return 35; }
 \+			   { return 36; }
-\".*\"			   { return 37; }
+{string_lit}	   { return 37; }
+\"[\\]	{ cerr << "Error: unknown escape sequence in string constant" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
+\"[\n|\"]*\"	 { cerr << "Error: newline in string constant" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
+\".*	 { cerr << "Error: string constant is missing closing delimiter" <<endl << "Lexical error: line " << linecount <<endl; return -1;}
 &&			   { return 38; }
 \/			   { return 39; }
 \.			   { return 40; }
@@ -72,6 +84,7 @@ string getnewline(string lexeme){
 	string result = "T_WHITESPACE ";
 	for (int i=0; i<lexeme.size(); i++){
 		if(lexeme[i]=='\n'){
+		linecount++;
 			result+="\\n";
 		}
 	}
@@ -84,7 +97,6 @@ void errLine(int linecount){
 
 int main () {
   int token;
-  int linecount=1;
   string lexeme;
   while ((token = yylex())) {
     if (token > 0) {
@@ -99,12 +111,12 @@ int main () {
         case 7: cout << "T_RPAREN " << lexeme << endl; break;
         case 8: cout << "T_ID " << lexeme << endl; break;
         case 9: cout << "T_WHITESPACE " << lexeme << endl; break;
-        case 10: linecount++; cout << getnewline(lexeme) << endl; break;
+        case 10: cout << getnewline(lexeme) << endl; break;
 	case 11: cout << "T_SEMICOLON " << lexeme << endl; break;
 	case 12: cout << "T_ASSIGN " << lexeme << endl; break;
 	case 13: cout << "T_INTCONSTANT " << lexeme << endl; break;
 	case 14: cout << "T_VAR " << lexeme << endl; break;
-	case 15: cout << "T_COMMENT " << lexeme.substr(0,lexeme.size()-1) << "\\n" << endl; break;
+	case 15: linecount++; cout << "T_COMMENT " << lexeme.substr(0,lexeme.size()-1) << "\\n" << endl; break;
 	case 16: cout << "T_CHARCONSTANT " << lexeme << endl; break;
 	case 17: cout << "T_EXTERN " << lexeme << endl; break;
 	case 18: cout << "T_MINUS " << lexeme << endl; break;
