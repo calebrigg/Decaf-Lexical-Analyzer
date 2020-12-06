@@ -19,9 +19,6 @@ string_lit "\""({all_char_lit}|{escaped_char})*"\""
 char_lit "\'"({all_char}|{escaped_char_c})"\'"
 string ({all_char_lit}|{escaped_char_s})*
 string_n ({all_char_lit}|{escaped_char_s}|"\n")*
-%s STRINGSTART
-%s ERRORSTRING
-
 %%
   /*
     Pattern definitions for all tokens
@@ -55,21 +52,21 @@ var 			   { return 14; }
 \=			   { return 12; }
 [0-9]+			   { return 13; }
 \/\/.*\n		   { return 15; }
-{char_lit}	   	{ return 16; }
-\'\' { cerr << "Error: char constant has zero width" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
-\'[\\|\n|\"|\del]+\' {cerr << "Error: unexpected character in input" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
-\'[a-zA-Z]+\' {cerr << "Error: char constant length is greater than one" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
-\'. {cerr << "Error: unterminated char constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+{char_lit}	   	   { return 16; }
+\'\' 			   { cerr << "Error: char constant has zero width" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+\'[\\|\n|\"|\del]+\' 	   { cerr << "Error: unexpected character in input" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+\'[a-zA-Z]+\' 	  	   { cerr << "Error: char constant length is greater than one" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+\'. 			   { cerr << "Error: unterminated char constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
 -			   { return 18; }
 ,			   { return 32; }
 ==			   { return 33; }
 \%			   { return 34; }
 \*			   { return 35; }
 \+			   { return 36; }
-\"{string}\"   { return 37; }
-\"{string_n}	  {cerr << "Error: newline in string constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl;return -1;}
-\"[\\]+.*\"	{cerr << "Error: unknown escape sequence in string constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
-\"{string}	 {cerr << "Error: string constant is missing closing delimiter" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+\"{string}\"   		   { return 37; }
+\"{string_n}	  	   {cerr << "Error: newline in string constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl;return -1;}
+\"[\\]+.*\"		   {cerr << "Error: unknown escape sequence in string constant" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
+\"{string}	 	   {cerr << "Error: string constant is missing closing delimiter" <<endl << "Lexical error: line " << linecount << ", position " << textpos+1<<endl; return -1;}
 &&			   { return 38; }
 \/			   { return 39; }
 \.			   { return 40; }
@@ -94,32 +91,32 @@ string getnewline(string lexeme){
 	string result = "T_WHITESPACE ";
 	for (int i=0; i<lexeme.size(); i++){
 		if(lexeme[i]=='\n'){
-		linecount++;
-    textpos=0;
+			linecount++;
+    			textpos=0;
 			result+="\\n";
 		}
-    else if(lexeme[i]=='\t'){
-      result+="\t";
-    }
-    else if(lexeme[i]==' '){
-      result+=" ";
-    }
-    else if(lexeme[i]=='\r'){
-      result+="\r";
-    }
-    else if(lexeme[i]=='\v'){
-      result+="\v";
-    }
-    else if(lexeme[i]=='\b'){
-      result+="\b";
-    }
-    textpos++;
+    		else if(lexeme[i]=='\t'){
+      			result+="\t";
+    		}
+    		else if(lexeme[i]==' '){
+      			result+=" ";
+    		}
+    		else if(lexeme[i]=='\r'){
+      			result+="\r";
+    		}
+    		else if(lexeme[i]=='\v'){
+      			result+="\v";
+    		}
+    		else if(lexeme[i]=='\b'){
+      			result+="\b";
+    		}
+    		textpos++;
 	}
 return result;
 }
 
 void errLine(int linecount){
-	cout<< linecount << endl;
+	cout << linecount << endl;
 }
 
 int main () {
@@ -148,7 +145,7 @@ int main () {
 	case 16: cout << "T_CHARCONSTANT " << lexeme << endl; textpos+=lexeme.size(); break;
 	case 17: cout << "T_EXTERN " << lexeme << endl; textpos+=lexeme.size(); break;
 	case 19: cout << "T_VOID " << lexeme << endl; textpos+=lexeme.size(); break;
-  case 18: cout << "T_MINUS " << lexeme << endl; textpos+=lexeme.size(); break;
+        case 18: cout << "T_MINUS " << lexeme << endl; textpos+=lexeme.size(); break;
 	case 20: cout << "T_BOOLTYPE " << lexeme << endl; textpos+=lexeme.size(); break;
 	case 21: cout << "T_FOR " << lexeme << endl; textpos+=lexeme.size(); break;
 	case 22: cout << "T_FALSE " << lexeme << endl; textpos+=lexeme.size(); break;
