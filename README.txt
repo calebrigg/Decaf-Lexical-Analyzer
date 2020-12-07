@@ -1,5 +1,5 @@
 
-Your documentation
+Decaf Lexical Analyzer
 ------------------
 
 The tool decaflex is used to create a stream of tokens based on the input stream.
