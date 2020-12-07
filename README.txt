@@ -2,6 +2,10 @@
 Decaf Lexical Analyzer
 ------------------
 
+Partner Project:
+Tasso Klassen - 300146224
+Caleb Rigg - 300140639
+
 https://youtu.be/aPYCFgKinb0
 
 The tool decaflex is used to create a stream of tokens based on the input stream.
