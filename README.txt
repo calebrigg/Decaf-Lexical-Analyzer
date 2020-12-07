@@ -1,10 +1,8 @@
+Tasso Klassen - 300146224
+Caleb Rigg - 300140639
 
 Decaf Lexical Analyzer
 ------------------
-
-Partner Project:
-Tasso Klassen - 300146224
-Caleb Rigg - 300140639
 
 https://youtu.be/aPYCFgKinb0
 
