@@ -2,6 +2,8 @@
 Decaf Lexical Analyzer
 ------------------
 
+https://youtu.be/aPYCFgKinb0
+
 The tool decaflex is used to create a stream of tokens based on the input stream.
 The way we implemented said stream is to use piped output using cat into the decaflex program.
 To automate that, I provide a bash script that goes through all files in the folder dev in testcases and a script that goes through all 
